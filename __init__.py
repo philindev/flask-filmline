@@ -2,7 +2,15 @@ from flask import Flask, render_template, request
 from json import dumps
 from database import __session, __all_modules
 from os import environ
+from sys import argv
 
+# from OpenSSL import SSL
+# context = SSL.Context(SSL.SSL_CB_READ)
+# context.use_privatekey_file('server.key')
+# context.use_certificate_file('server.crt')
+
+__session.global_init("./database/database.db")
+session = __session.create_session()
 
 app = Flask(__name__, template_folder="./frontend", static_folder="./frontend")
 KEY = "AAAA_BBBB"
@@ -122,6 +130,6 @@ def films_back():
 
 
 if __name__ == '__main__':
-    __session.global_init("./database/database.db")
-    session = __session.create_session()
     app.run(host='0.0.0.0', port=int(environ.get('PORT', 5000)))
+    # app.run(host=argv[1], port=argv[2], debug=True)
+    session.close()
