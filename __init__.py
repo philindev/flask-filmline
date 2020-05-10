@@ -124,4 +124,4 @@ def films_back():
 if __name__ == '__main__':
     __session.global_init("./database/database.db")
     session = __session.create_session()
-    app.run(port='0.0.0.0', port=int(environ.get('PORT', 5000)))
+    app.run(host='0.0.0.0', port=int(environ.get('PORT', 5000)))
