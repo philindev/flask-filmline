@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
 from json import dumps
 from database import __session, __all_modules
-import sys
+from os import environ
 
 
 app = Flask(__name__, template_folder="./frontend", static_folder="./frontend")
@@ -121,7 +121,7 @@ def films_back():
             return dumps({"status_code": 404, "message": "Method does not exist"})
 
 
-if __name__ == '__main__' and len(sys.argv) > 2:
+if __name__ == '__main__':
     __session.global_init("./database/database.db")
     session = __session.create_session()
-    app.run(host=sys.argv[1], port=sys.argv[2])
+    app.run(port='0.0.0.0', port=int(environ.get('PORT', 5000)))
