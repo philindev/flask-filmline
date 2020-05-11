@@ -2,12 +2,14 @@ from flask import Flask, render_template, request
 from json import dumps
 from database import __session, __all_modules
 from os import environ
+from kinopoisk import get_film_url_kinopoisk
 from sys import argv
 
 # from OpenSSL import SSL
 # context = SSL.Context(SSL.SSL_CB_READ)
 # context.use_privatekey_file('server.key')
 # context.use_certificate_file('server.crt')
+
 
 __session.global_init("./database/database.db")
 session = __session.create_session()
@@ -21,7 +23,7 @@ KEY = "AAAA_BBBB"
 @app.route("/entrance",  methods=["GET", "POST"])
 def log():
     if request.method == "GET":
-        return render_template("index.html", title="FilmLine")
+        return render_template("hello.html")
 
 
 @app.route("/full_description", methods=["POST"])
@@ -49,7 +51,9 @@ def create_page():
 @app.route("/film/<int:key>")
 def open_page(key):
     current_film = session.query(__all_modules.Film).filter(__all_modules.Film.id == key).first()
-    return render_template("film.html", title="FilmLine", url=current_film.picture, name=current_film.title, des=current_film.description, rate=current_film.rate)
+    link = get_film_url_kinopoisk(current_film.title)
+    rate = str(int((int(current_film.rate) / 10) * 100))
+    return render_template("index.html", title="FilmLine", url=current_film.picture, name=current_film.title, des=current_film.description, rate=rate, link=link)
 
 
 @app.route("/api/maintain_users/", methods=["GET", "POST"])
