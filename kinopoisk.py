@@ -29,8 +29,11 @@ def get_film_url_kinopoisk(name):
     with open("popular.txt", 'rb') as fin:
         page = fin.read()
         page = page.decode("utf-8")
-    tree = html.fromstring(page)
-    div_node = tree.find_class("element most_wanted")[0].find_class("pic")[0]
-    link = div_node.xpath('.//a/@data-id')[0]
-    finish_url = base + link
+    try:
+        tree = html.fromstring(page)
+        div_node = tree.find_class("element most_wanted")[0].find_class("pic")[0]
+        link = div_node.xpath('.//a/@data-id')[0]
+        finish_url = base + link
+    except Exception as e:
+        finish_url = "https://www.kinopoisk.ru/series/10421811111/"
     return finish_url
